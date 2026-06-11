@@ -1,26 +1,22 @@
 package com.example.mcs.converter;
 
 import com.example.mcs.exception.ConversionException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class ConverterFactory {
-    private final Map<String, FileConverter> converters;
-
-    public ConverterFactory(List<FileConverter> converterList) {
-        converters = converterList.stream()
-                .collect(Collectors.toMap(FileConverter::getFormat, c -> c));
-    }
+    private final List<FileConverter> converters;
 
     public FileConverter getConverter(String format) {
-        FileConverter converter = converters.get(format.toLowerCase());
-        if (converter == null) {
-            throw new ConversionException("No converter for format: " + format, null);
+        for (FileConverter converter : converters) {
+            if (converter.getFormat().equalsIgnoreCase(format)) {
+                return converter;
+            }
         }
-        return converter;
+        throw new ConversionException("No converter for format: " + format, null);
     }
 }

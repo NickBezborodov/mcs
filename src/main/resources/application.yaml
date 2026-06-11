@@ -1,5 +1,8 @@
 spring:
   kafka:
+    topics:
+      input: file-converter-input
+      output: file-converter-output
     bootstrap-servers: localhost:9092
     consumer:
       group-id: converter-group

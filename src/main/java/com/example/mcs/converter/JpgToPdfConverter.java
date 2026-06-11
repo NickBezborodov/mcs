@@ -1,6 +1,7 @@
 package com.example.mcs.converter;
 
 
+import com.example.mcs.exception.ConversionException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -30,7 +31,7 @@ public class JpgToPdfConverter implements FileConverter {
         document.save(byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     } catch(IOException e){
-        throw  new RuntimeException("Failed to convert", e);
+        throw  new ConversionException("Failed to convert", e);
     }
 }
 
