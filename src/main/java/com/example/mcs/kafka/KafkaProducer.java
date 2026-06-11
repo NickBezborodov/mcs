@@ -12,7 +12,7 @@ public class KafkaProducer {
     @Value("${kafka.topics.output}")
     private String outputTopic;
 
-    public void sendMessage(String message) {
+    public void sendMessage(String message, String pdfPath) {
         kafkaTemplate.send(outputTopic, message);
     }
 }
