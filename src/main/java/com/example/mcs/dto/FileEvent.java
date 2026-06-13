@@ -9,5 +9,5 @@ import lombok.*;
 public class FileEvent {
     private String filePath;
     private String format;
-    private String outputTopic;
+    private EventType type;
 }

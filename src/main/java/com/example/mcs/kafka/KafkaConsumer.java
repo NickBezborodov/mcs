@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class KafkaConsumer {
     private final ConversionService conversionService;
 
-    @KafkaListener(topics = "${kafka.topics.input}", groupId = "converter-group")
+    @KafkaListener(groupId = "converter-group")
     public void listen(FileEvent event) {
         log.info("Received event: {}", event);
         conversionService.convert(event);
