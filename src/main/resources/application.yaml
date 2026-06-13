@@ -3,6 +3,7 @@ spring:
     topics:
       input: file-converter-input
       output: file-converter-output
+      error: file-converter-error
     bootstrap-servers: localhost:9092
     consumer:
       group-id: converter-group

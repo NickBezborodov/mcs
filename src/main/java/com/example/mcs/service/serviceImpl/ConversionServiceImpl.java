@@ -26,17 +26,20 @@ public class ConversionServiceImpl implements ConversionService {
             log.info("Already processed: {}", event.getFilePath());
             return;
         }
-        byte[] fileBytes = minioService.downloadFile(event.getFilePath());
+        try {
+            byte[] fileBytes = minioService.downloadFile(event.getFilePath());
 
-        FileConverter converter = converterFactory.getConverter(event.getFormat());
-        byte[] pdfBytes = converter.convert(fileBytes);
+            FileConverter converter = converterFactory.getConverter(event.getFormat());
+            byte[] pdfBytes = converter.convert(fileBytes);
 
-        String pdfPath = event.getFilePath() + ".pdf";
-        minioService.uploadFile(pdfPath, pdfBytes);
+            String pdfPath = event.getFilePath() + ".pdf";
+            minioService.uploadFile(pdfPath, pdfBytes);
 
-        kafkaProducer.sendMessage(event.getOutputTopic(), pdfPath);
-
-        inboxService.markProcessed(event.getFilePath());
+            kafkaProducer.sendMessage(event.getOutputTopic(), pdfPath);
+            inboxService.markProcessed(event.getFilePath());
+        } catch (Exception e) {
+            log.error("Conversion failed: {}", e.getMessage());
+            kafkaProducer.sendMessage(event.getOutputTopic(), "ERROR:" + e.getMessage());
+        }
     }
-
 }
