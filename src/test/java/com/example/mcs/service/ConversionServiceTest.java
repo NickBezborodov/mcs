@@ -10,6 +10,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.mcs.dto.EventType;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -36,7 +37,7 @@ class ConversionServiceTest extends AbstractIT {
     @Test
     void shouldConvertTxtToPdf() throws Exception {
         // Given
-        FileEvent event = new FileEvent("test-file.txt", "txt", outputTopic);
+        FileEvent event = new FileEvent("test-file.txt", "txt", EventType.SUCCESS);
         String message = objectMapper.writeValueAsString(event);
 
         // When

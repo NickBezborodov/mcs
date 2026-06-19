@@ -1,12 +1,15 @@
 package com.example.mcs.converter;
 
 import com.example.mcs.exception.ConversionException;
+
 import java.io.ByteArrayInputStream;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.stereotype.Component;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
+
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -16,12 +19,11 @@ import java.util.zip.ZipInputStream;
 
 @Component
 @RequiredArgsConstructor
-public class ZipToPdfConverter implements FileConverter {
+public class ZipToPdfConverter {
 
-    private final ConverterFactory converterFactory;
+    private final List<FileConverter> converters;
 
 
-    @Override
     public byte[] convert(byte[] input) {
         List<byte[]> pdfList = new ArrayList<>();
 
@@ -32,12 +34,16 @@ public class ZipToPdfConverter implements FileConverter {
 
                 byte[] fileBytes = zis.readAllBytes();
                 String extension = getExtension(entry.getName());
-                FileConverter converter = converterFactory.getConverter(extension);
+
+                FileConverter converter = converters.stream()
+                        .filter(c -> c.getFormat().equalsIgnoreCase(extension))
+                        .findFirst()
+                        .orElseThrow(() -> new ConversionException("No converter for: " + extension, null));
                 byte[] pdfBytes = converter.convert(fileBytes);
                 pdfList.add(pdfBytes);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to convert ZIP", e);
+            throw new ConversionException("Failed to convert ZIP", e);
         }
 
         return mergePdfs(pdfList);
@@ -65,10 +71,5 @@ public class ZipToPdfConverter implements FileConverter {
         } catch (Exception e) {
             throw new ConversionException("Failed to merge PDFs", e);
         }
-    }
-
-    @Override
-    public String getFormat() {
-        return "zip";
     }
 }

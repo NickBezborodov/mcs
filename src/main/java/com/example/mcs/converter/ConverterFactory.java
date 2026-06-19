@@ -12,11 +12,9 @@ public class ConverterFactory {
     private final List<FileConverter> converters;
 
     public FileConverter getConverter(String format) {
-        for (FileConverter converter : converters) {
-            if (converter.getFormat().equalsIgnoreCase(format)) {
-                return converter;
-            }
-        }
-        throw new ConversionException("No converter for format: " + format, null);
+        return converters.stream()
+                .filter(c -> c.getFormat().equalsIgnoreCase(format))
+                .findFirst()
+                .orElseThrow(() -> new ConversionException("No converter for: " + format, null));
     }
 }

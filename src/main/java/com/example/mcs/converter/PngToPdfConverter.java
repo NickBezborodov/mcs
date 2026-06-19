@@ -8,7 +8,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.stereotype.Component;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 @Component
 public class PngToPdfConverter implements FileConverter {
@@ -28,7 +27,7 @@ public class PngToPdfConverter implements FileConverter {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             document.save(byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();
-        } catch(IOException e){
+        } catch(Exception e){
             throw  new ConversionException("Failed to convert", e);
         }
     }
