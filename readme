@@ -1,1 +1,23 @@
-readme
+```markdown
+# MCS — Microservices Architecture Demo
+
+Демонстрация микросервисной архитектуры на Spring Boot.
+
+## О проекте
+
+Набор микросервисов с Service Discovery (Eureka), Docker и docker-compose. Проект демонстрирует умение работать с распределёнными системами.
+
+## Сервисы
+- **Eureka Server** — Service Discovery
+- Основные бизнес-сервисы (в процессе)
+
+## Технологии
+- Spring Boot 3 + Spring Cloud
+- Eureka Server
+- Docker + docker-compose
+- Maven
+- PostgreSQL
+
+## Запуск всего стека
+```bash
+docker-compose up --build
