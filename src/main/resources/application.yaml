@@ -1,0 +1,48 @@
+server:
+  port: 1488
+
+
+kafka:
+  topics:
+    input: file-converter-input
+    output: file-converter-output
+    error: file-converter-error
+
+spring:
+  application:
+    name: mcs
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: converter-group-v2
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.example.mcs.dto.FileEvent
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mcs
+    username: postgres
+    password: nikita1488
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: classpath:db/changelog/master.yaml
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    resttemplate:
+      enabled: true
+
+minio:
+  url: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket: files
